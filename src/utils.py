@@ -23,7 +23,8 @@ def group2mmdetection(group: dict) -> dict:
             {
                 'bboxes': np.array(bboxes, dtype=np.float32),
                 'original_labels': group['ClassId'].values,
-                'labels': group['ClassId'].apply(lambda x: x.split('_')[0]).values.astype(np.int) + 1,
+                #'labels': group['ClassId'].apply(lambda x: x.split('_')[0]).values.astype(np.int) + 1,
+                'labels': group['ClassId'].values,
                 'masks': rles
             }
     }
