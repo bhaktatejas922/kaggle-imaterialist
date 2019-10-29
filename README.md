@@ -60,4 +60,5 @@ To see code for setup, pre-processing, training, and testing, please see Jupyter
 
 ## References
 * https://github.com/open-mmlab/mmdetection
-The First Place Solution of [iMaterialist (Fashion) 2019](https://www.kaggle.com/c/imaterialist-fashion-2019-FGVC6/)
+
+* The First Place Solution of [iMaterialist (Fashion) 2019](https://www.kaggle.com/c/imaterialist-fashion-2019-FGVC6/)
