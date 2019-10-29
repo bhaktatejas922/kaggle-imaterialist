@@ -1,4 +1,24 @@
-# The First Place Solution of [iMaterialist (Fashion) 2019](https://www.kaggle.com/c/imaterialist-fashion-2019-FGVC6/)
+# Steel Defect Detection using Hybrid Task Cascade Model.
+
+What is Hybrid Task Cascade?
+
+HTC, or Hybrid Task Cascade is a cascade of multiple top performing models. It is a very complex model with thousands of layers that if training from scratch, takes weeks to train on even the best setups.
+
+Cascade is a classic yet powerful architecture that has
+boosted performance on various tasks. However, how to introduce cascade to instance segmentation remains an open
+question. A simple combination of Cascade **R-CNN** and
+**Mask R-CNN** only brings limited gain. In exploring a more
+effective approach, we find that the key to a successful instance segmentation cascade is to fully leverage the reciprocal relationship between detection and segmentation. In
+this work, we propose a new framework, Hybrid Task Cascade (HTC), which differs in two important aspects: (1) instead of performing cascaded refinement on these two tasks
+separately, it interweaves them for a joint multi-stage processing; (2) it adopts a fully convolutional branch to provide spatial context, which can help distinguishing hard
+foreground from cluttered background. Overall, this framework can learn more discriminative features progressively
+while integrating complementary features together in each
+stage. Without bells and whistles, a single HTC obtains
+38.4% and 1.5% improvement over a strong Cascade Mask
+R-CNN baseline on MSCOCO dataset. Moreover, our overall system achieves 48.6 mask AP on the test-challenge split,
+**ranking 1st in the COCO 2018 Challenge Object Detection**
+Task. Code is available at: https://github.com/
+open-mmlab/mmdetection.
 
 ![ensemble](figures/prediction.png)
 
@@ -20,7 +40,7 @@ from [600, 1200], and the scale of long edge is fixed as 1900.
 ### Training details:
 * pre-train from COCO
 * optimizer: `SGD(lr=0.03, momentum=0.9, weight_decay=0.0001)`
-* batch_size: 16 = 2 images per gpu x 8 gpus Tesla V100
+* batch_size: 2 = 2 images, Tesla V100
 * learning rate scheduler:
 ```
 if iterations < 500:
@@ -34,113 +54,10 @@ if epochs > 20:
 ```
 * training time: ~3 days.
 
-### Parameter tuning:
-After the 12th epoch with the default parameters, the metric on LB was **0.21913**. Next, I tuned postprocessing thresholds using validation data:
-```
-rcnn=dict(
-    score_thr=0.5,
-    nms=dict(type='nms', iou_thr=0.3),
-    max_per_img=100,
-    mask_thr_binary=0.45
-)
-```
+To see code for setup, pre-processing, training, and testing, please see Jupyter Notebook here: https://github.com/bhaktatejas922/kaggle-imaterialist/blob/master/mmdetection.ipynb
 
-This improved the metric on LB: **0.21913 -&gt; 0.30011.**
-
-### Test time augmentation:
-I use 3 scales as well as horizontal flip at test time and ensemble the results. Testing scales are (1000, 1600), (1200, 1900), (1400, 2200). 
-
-I drew a TTA scheme for Mask R-CNN, which is implemented in mmdetection library. For Hybrid Task Cascade R-CNN, I rewrote this code. 
-
-This improved the metric on LB: **0.30011 -&gt; 0.31074.**
-
-![TTA](figures/tta.png)
-
-### Ensemble:
-I ensemble the 3 best checkpoints of my model. The ensemble scheme is similar to TTA. 
-
-This improved the metric on LB: **0.31074 -&gt; 0.31626.**
-
-![ensemble](figures/ensemble.png)
-
-### Attributes:
-I didn't use attributes at all: they were difficult to predict and the removal of classes with attributes greatly improved the metric. 
-
-During the whole competition, I deleted classes with attributes: `{0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12}` U `{27, 28, 33}`. But two days before the end I read [the discussion] (https://www.kaggle.com/c/kaggle-imaterialist-fashion-2019-FGVC6/discussion/94811#latest548137) and added back classes `{27, 28, 33 }`. 
-
-This improved the metric on LB: **0.31626 -&gt; 0.33511.**
-
-### Postprocessing for masks
-My post-processing algorithm for avoid intersections of masks of the same class:
-```python
-def hard_overlaps_suppression(binary_mask, scores):
-    not_overlap_mask = []
-    for i in np.argsort(scores)[::-1]:
-        current_mask = binary_mask[..., i].copy()
-        for mask in not_overlap_mask:
-            current_mask = np.bitwise_and(current_mask, np.invert(mask))
-        not_overlap_mask.append(current_mask)
-    return np.stack(not_overlap_mask, -1)
-```
-
-### Small postprocessing:
-I deleted objects with an area of less than 20 pixels. 
-
-This improved the metric on LB: **0.33511 -&gt; 0.33621.**
-
-## How to run?
-
-### Docker
-```bash
-make build
-make run-[server-name]
-make exec
-```
-
-### Build mmdetection:
-```bash
-cd mmdetection
-bash compile.sh
-python setup.py develop
-```
-
-### Prepare pretrained weights:
-```bash
-bash prepare_weights.sh
-```
-
-### Data structure
-```
-/data/
-├── train/
-│   └── ...
-├── test/
-│   └── ...
-└── train.csv.zip
-/dumps/
-└── htc_dconv_c3-c5_mstrain_x101_64x4d_fpn_20e_1200x1900/
-
-```
-Fix the [error](https://www.kaggle.com/c/kaggle-imaterialist-fashion-2019-FGVC6/discussion/91217#latest-529042) in `train.csv.zip.`
-
-### Prepare annotations for mmdetection:
-```bash
-cd scripts
-bash create_mmdetection_train.sh
-bash create_mmdetection_test.sh
-bash split.sh
-```
-
-### Training the model:
-```bash
-CUDA_VISIBLE_DEVICES=[list of gpus] bash dist_train.sh [config] [gpus] [--validate] 
-```
-
-### Test the model:
-```bash
-CUDA_VISIBLE_DEVICES=[list of gpus] bash dist_test_ensemble.sh [config] [gpus]
-```
 
 
 ## References
 * https://github.com/open-mmlab/mmdetection
+The First Place Solution of [iMaterialist (Fashion) 2019](https://www.kaggle.com/c/imaterialist-fashion-2019-FGVC6/)
