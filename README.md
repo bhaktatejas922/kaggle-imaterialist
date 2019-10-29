@@ -17,8 +17,7 @@ stage. Without bells and whistles, a single HTC obtains
 38.4% and 1.5% improvement over a strong Cascade Mask
 R-CNN baseline on MSCOCO dataset. Moreover, our overall system achieves 48.6 mask AP on the test-challenge split,
 **ranking 1st in the COCO 2018 Challenge Object Detection**
-Task. Code is available at: https://github.com/
-open-mmlab/mmdetection.
+Task. Code is available at: https://github.com/open-mmlab/mmdetection.
 
 ![ensemble](figures/prediction.png)
 
