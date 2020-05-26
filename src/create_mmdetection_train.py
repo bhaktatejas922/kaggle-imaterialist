@@ -5,7 +5,7 @@ from multiprocessing import Pool
 import json
 import pandas as pd
 from tqdm import tqdm
-from src.utils import group2mmdetection
+from utils import group2mmdetection
 
 
 def parse_args():
@@ -22,7 +22,7 @@ def create_images_coco(filename):
         'id': int(filename.split('.', 1)[0], 16)   # image_id in annoatations function
         }
 
-def create_df_anns_coco(filename, bbox: list, id): # id is unique to each annoationations dict
+def create_df_anns_coco(filename, bbox, id): # id is unique to each annoationations dict
     return {
         'segmentation': [],  # if you have mask labels which we don't
         'area': int(bbox[2])*int(bbox[3]), # area of bbox

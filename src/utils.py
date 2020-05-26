@@ -1,7 +1,7 @@
 import numpy as np
 from pycocotools import mask as mutils
 
-from src.rle import kaggle2coco
+from rle import kaggle2coco
 
 # need to redo all of these
 def group2mmdetection(group: dict) -> dict:

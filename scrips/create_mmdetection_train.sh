@@ -1,6 +1,5 @@
 #!/usr/bin/env bash
 
-PYTHONPATH=/kaggle-imaterialist python /kaggle-imaterialist/src/create_mmdetection_train.py \
+PYTHONPATH=kaggle-imaterialist python3 src/create_mmdetection_train.py \
     --annotation=train.csv \
-    --root=/train \
-    --output=/data/train_mmdetection.pkl
+    --output=data/train_mmdetection.pkl

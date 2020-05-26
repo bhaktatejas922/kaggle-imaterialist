@@ -6,9 +6,9 @@ import cv2
 from tqdm import tqdm
 import mmcv
 import pycocotools.mask as mutils
-from src.rle import kaggle_rle_encode
-from src.metric import calc_score_per_class
-from src.utils import create_labeled_mask, check_overlaps, hard_overlaps_suppression
+from rle import kaggle_rle_encode
+from metric import calc_score_per_class
+from utils import create_labeled_mask, check_overlaps, hard_overlaps_suppression
 
 
 def parse_args():
