@@ -15,10 +15,10 @@ def main():
     args = parse_args()
     submission = pd.read_csv(args.submission)
     submission_without_attributes = submission[~submission['ClassId'].isin(ATTRIBUTE_CLASSES)].copy()
-    empty_ids = list(set(submission['ImageId']) - set(submission_without_attributes['ImageId']))
+    empty_ids = list(set(submission['image_id']) - set(submission_without_attributes['image_id']))
     submission_empty = pd.DataFrame([empty_ids, [''] * len(empty_ids), ['23'] * len(empty_ids)]
                                    ).T.rename(columns={
-                                       0: 'ImageId',
+                                       0: 'image_id',
                                        1: 'EncodedPixels',
                                        2: 'ClassId'
                                    })

@@ -94,8 +94,8 @@ def main():
 
     if args.submission is not None:
         submission = pd.read_csv(args.submission)
-        submission = submission.drop_duplicates('ImageId')
-        id2metric = dict(zip(submission['ImageId'], submission['mAP']))
+        submission = submission.drop_duplicates('image_id')
+        id2metric = dict(zip(submission['image_id'], submission['mAP']))
         metrics = [id2metric[x['filename']] for x in annotation]
     else:
         metrics = [None for _ in annotation]

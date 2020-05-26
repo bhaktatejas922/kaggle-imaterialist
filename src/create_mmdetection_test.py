@@ -37,9 +37,9 @@ def convert(group: dict, root) -> dict:
 def main():
     args = parse_args()
     annotation = pd.read_csv(args.annotation)
-    print(len(annotation), len(set(annotation['ImageId'])))
+    print(len(annotation), len(set(annotation['image_id'])))
 
-    groups = list(annotation.groupby('ImageId'))
+    groups = list(annotation.groupby('image_id'))
 
     with Pool(args.n_jobs) as p:
         samples = list(tqdm(iterable=p.imap_unordered(partial(convert, root=args.root), groups), total=len(groups)))

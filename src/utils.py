@@ -3,12 +3,12 @@ from pycocotools import mask as mutils
 
 from src.rle import kaggle2coco
 
-
+# need to redo all of these
 def group2mmdetection(group: dict) -> dict:
     image_id, group = group
-    assert group['Width'].max() == group['Width'].min()
-    assert group['Height'].max() == group['Height'].min()
-    height, width = group['Height'].max(), group['Width'].max()
+    assert group['width'].max() == group['width'].min() #all imgs same size
+    assert group['height'].max() == group['height'].min()
+    height, width = group['height'].max(), group['width'].max()
     rles = group['EncodedPixels'].apply(lambda x: kaggle2coco(list(map(int, x.split())), height, width)).tolist()
     rles = mutils.frPyObjects(rles, height, width)
     masks = mutils.decode(rles)

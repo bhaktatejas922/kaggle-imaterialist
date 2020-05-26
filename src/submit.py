@@ -72,7 +72,7 @@ def create_mask(args):
                 rle = kaggle_rle_encode(prediction_mask[..., mask_id])
                 samples.append(
                     {
-                        'ImageId': annotation['filename'],
+                        'image_id': annotation['filename'],
                         'EncodedPixels': ' '.join(map(str, rle)),
                         'ClassId': str(cls)
                     }
@@ -81,7 +81,7 @@ def create_mask(args):
             metrics.append(0)
 
     if not len(samples):
-        samples.append({'ImageId': annotation['filename'], 'EncodedPixels': '', 'ClassId': '23'})
+        samples.append({'image_id': annotation['filename'], 'EncodedPixels': '', 'ClassId': '23'})
     if not len(metrics):
         metrics.append(1)
     return {'samples': samples, 'metric': np.mean(metrics)}
